@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '../views/index'
 import Person from '../views/person'
-import Manage from '../views/manage'
+import Journal from '../views/journal'
 import Defense from '../views/defense'
 import Login from '../views/login'
 
@@ -20,8 +20,8 @@ export default new Router({
           component: Person
         },
         {
-          path: 'manage',
-          component: Manage
+          path: 'journal',
+          component: Journal
         },
         {
           path: 'defense',
@@ -38,8 +38,8 @@ export default new Router({
           component: Person
         },
         {
-          path: 'manage',
-          component: Manage
+          path: 'journal',
+          component: Journal
         },
         {
           path: 'defense',

@@ -18,10 +18,14 @@
                     placeholder="输入webId" size="large"/>
                 </div>
                 <div class="info-item" v-if="mode==1">
-                    <Input v-model="phone" prefix="md-phone-portrait" maxlength="11"
+                    <Input v-model="phone" prefix="md-phone-portrait" 
                     placeholder="输入手机号" size="large"/>
-                    <Button class="getCode" size="large" @click="sendMessage" :disabled="disabled">{{code}}</Button>
                 </div>
+                <!-- <div class="info-item" v-if="mode==1">
+                    <Input v-model="code" prefix="md-code" maxlength="11"
+                    placeholder="输入验证码" size="large"/>
+                    <Button class="getCode" size="large" @click="sendMessage" :disabled="disabled">{{codeState}}</Button>
+                </div> -->
             </div>
             <div class="submit" @click="login">{{text}}</div>
         </div>
@@ -37,7 +41,7 @@ export default {
             password: '',
             webId:'',
             phone:'',
-            code:'获取验证码',
+            codeState:'获取验证码',
             disabled: false
         }
     },
@@ -52,18 +56,34 @@ export default {
                 var minute = 60;
                 this.disabled = true;
                 var id = setInterval(()=>{
-                    this.code = minute + 's后可重发';
+                    this.codeState = minute + 's后可重发';
                     minute--;
                     if(minute < 0) {
                         clearInterval(id);
                         this.disabled = false;
-                        this.code = '获取验证码';
+                        this.codeState = '获取验证码';
                     }
                 },1000)
             }
         },
         login(){
-            this.$router.push('/index/person');
+            if(this.mode == 0){
+                this.axios({
+                    method: 'post',
+                    url: 'http://10.132.10.180:8080/cheklogin',
+                    data: {
+                        "email": "1061666806@qq.com",
+                        "webid": "11111111",
+                        "password": "11111111"
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+                // this.$router.push('/index/person');
+            }
         }
     }
 }
@@ -73,7 +93,8 @@ export default {
 #container{
     width: 100%;
     height: 100%;
-    background:linear-gradient(45deg, rgb(0, 173, 216), rgb(213, 4, 255));
+    background: url(../assets/img/login_bg.jpg);
+    background-size: 100% 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -82,7 +103,7 @@ export default {
     width: 320px;
     /* height: 360px; */
     border-radius: 5px;
-    background: #fff;
+    background: rgb(239, 234, 255);
     padding: 0 30px;
     display: flex;
     flex-direction: column;
@@ -100,11 +121,12 @@ export default {
     cursor: pointer;
 }
 .active{
-    color: rgb(93, 167, 228);
+    color: rgb(39, 103, 155);
 }
 .info{
     overflow: auto;
     width: 240px;
+    padding: 0 2px;
 }
 .info-item{
     margin-bottom: 20px;
@@ -129,7 +151,7 @@ export default {
     line-height: 34px;
     text-align: center;
     font-size: 16px;
-    background: linear-gradient(90deg, rgb(0, 173, 216), rgb(213, 4, 255));
+    background: rgb(39, 103, 155);
     border-radius: 20px;
     color: #fff;
     cursor: pointer;

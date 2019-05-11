@@ -15,14 +15,14 @@
                             个人信息
                         </MenuItem>
                     </MenuGroup>
-                    <MenuGroup title="网站管理">
-                        <MenuItem name="manage" to='/index/manage'>
-                            <Icon type="md-cube" />
-                            网站信息
+                    <MenuGroup title="攻击信息">
+                        <MenuItem name="journal" to='/index/journal'>
+                            <Icon type="ios-bookmarks" />
+                            攻击日志
                         </MenuItem>
                         <MenuItem name="defense" to='/index/defense'>
                             <Icon type="logo-angular" />
-                            网站防御
+                            详细信息
                         </MenuItem>
                     </MenuGroup>
                 </Menu>
@@ -88,13 +88,13 @@
 #content-area{
     width: 100%;
     height: 100%;
-    padding: 20px;
+    padding: 15px;
 }
 #content{
     width: 100%;
     height: 100%;
     background-color: #fff;
-    padding: 30px;
+    padding: 10px;
     display: flex;
     justify-content: center;
 }
