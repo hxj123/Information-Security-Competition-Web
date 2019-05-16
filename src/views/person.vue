@@ -62,6 +62,7 @@ export default {
     },
     methods:{
         edit(index){
+            this.hasError = false;
             this.editIndex = index;
             switch(index){
                 case 1:
@@ -93,7 +94,6 @@ export default {
             if(!reg.test(this.editContent)){
                 this.hasError = true;
             }else{
-                this.hasError = false;
                 this.isLoading = true;
                 switch(this.editIndex){
                     case 1:

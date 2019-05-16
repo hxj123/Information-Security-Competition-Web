@@ -27,6 +27,7 @@
                     <Button class="getCode" size="large" @click="sendMessage" :disabled="disabled">{{codeState}}</Button>
                 </div> -->
             </div>
+            <div class="error" style="color:rgb(255, 47, 47);" v-show="hasError">账号、密码或webId错误</div>
             <div class="submit" @click="login">{{text}}</div>
         </div>
     </div>
@@ -42,7 +43,8 @@ export default {
             webId:'',
             phone:'',
             codeState:'获取验证码',
-            disabled: false
+            disabled: false,
+            hasError: false,
         }
     },
     computed:{
@@ -67,6 +69,7 @@ export default {
             }
         },
         login(){
+            var that = this;
             if(this.mode == 0){
                 this.axios({
                     method: 'post',
@@ -77,12 +80,34 @@ export default {
                         "password": "11111111"
                     }
                 }).then(function (response) {
-                    console.log(response);
+                    if(response.data.status == 200){
+                        that.$router.push('/index/person');
+                    }else{
+                        that.hasError = true;
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-                // this.$router.push('/index/person');
+            }else{
+                this.axios({
+                    method: 'post',
+                    url: 'http://10.132.10.180:8080/cheklogin',
+                    data: {
+                        "email": "1061666806@qq.com",
+                        "webid": "11111111",
+                        "password": "11111111"
+                    }
+                }).then(function (response) {
+                    if(response.data.status == 200){
+                        that.$router.push('/index/person');
+                    }else{
+                        that.hasError = true;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             }
         }
     }

@@ -20,7 +20,7 @@
                             <Icon type="ios-bookmarks" />
                             攻击日志
                         </MenuItem>
-                        <MenuItem name="defense" to='/index/defense'>
+                        <MenuItem name="detail" to='/index/detail'>
                             <Icon type="logo-angular" />
                             详细信息
                         </MenuItem>
@@ -76,9 +76,7 @@
 }
 #main{
     flex-grow: 1;
-    min-width: 1000px;
     display: flex;
-
 }
 #nav{
     height: 100%;
@@ -87,6 +85,7 @@
 }
 #content-area{
     width: 100%;
+    min-width: 1000px;
     height: 100%;
     padding: 15px;
 }

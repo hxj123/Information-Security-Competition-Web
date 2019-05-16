@@ -74,8 +74,9 @@ export default {
     position: relative;
     width: 100%;
     background-color: #fff;
-    padding: 30px 40px 15px;
+    padding: 25px 40px;
 }
+.ivu-table-overflowX{ overflow: hidden;}
 .email-swicth{
     display: flex;
     align-items: center; 
@@ -84,7 +85,8 @@ export default {
 }
 .table-bottom{
     width: 100%;
-    height: 60px;
+    height: 53px;
+    margin-top: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
