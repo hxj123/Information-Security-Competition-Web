@@ -37,7 +37,7 @@ export default {
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: rgba(102, 102, 102, 0.123);
+    background-color: rgba(102, 102, 102, 0.215);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,12 +46,12 @@ export default {
 .modal{
     width: 360px;
     background-color: #fff;
-    padding: 15px 20px;
+    padding: 15px 25px;
     border-radius: 5px;
 }
 .title{
     font-size: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-weight: bolder;
 }
 .modal-bottom{

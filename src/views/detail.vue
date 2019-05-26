@@ -8,22 +8,26 @@
                         <Icon type="ios-arrow-down"></Icon>
                     </a>
                     <DropdownMenu slot="list">
-                        <DropdownItem name="1">自定义</DropdownItem>
-                        <DropdownItem name="2">按日查看</DropdownItem>
-                        <DropdownItem name="3">按月查看</DropdownItem>
-                        <DropdownItem name="4">按年查看</DropdownItem>
+                        <DropdownItem name="1">按日查看</DropdownItem>
+                        <DropdownItem name="2">按月查看</DropdownItem>
+                        <DropdownItem name="3">按年查看</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <DatePicker type="daterange" @on-change="dateChange" :value="dateRange" v-show="selectorType==1" :options="getDisabledDate" placeholder="Select date" style="width: 200px"></DatePicker>
-                <DatePicker type="date" @on-change="dateChange" :value="date" v-show="selectorType==2" placeholder="Select day" :options="getDisabledDate" :editable="false" style="width: 200px"></DatePicker>
-                <DatePicker type="month" @on-change="dateChange" :value="month" v-show="selectorType==3" placeholder="Select month" :options="getDisabledDate" :editable="false" style="width: 200px"></DatePicker>
-                <DatePicker type="year" @on-change="dateChange" :value="year" v-show="selectorType==4" placeholder="Select year" :options="getDisabledDate" :editable="false" style="width: 200px"></DatePicker>
+                <DatePicker type="date" @on-change="dateChange" :value="day" v-show="selectorType==1" placeholder="Select day" :options="getDisabledDate" :editable="false" style="width: 200px"></DatePicker>
+                <DatePicker type="month" @on-change="dateChange" :value="month" v-show="selectorType==2" placeholder="Select month" :options="getDisabledDate" :editable="false" style="width: 200px"></DatePicker>
+                <DatePicker type="year" @on-change="dateChange" :value="year" v-show="selectorType==3" placeholder="Select year" :options="getDisabledDate" :editable="false" style="width: 200px"></DatePicker>
             </div>
-            <button>在地图上显示</button>
+            <button @click="showMap=true">在地图上显示</button>
         </div>
         <div id="detail-chart">
             <div id="fan-chart"></div>
             <div id="line-chart"></div>
+        </div>
+        <div id="map-modal" v-show="showMap">
+            <div id="map">
+                <div id="map-container"></div>
+                <Icon type="md-close" @click="showMap=false" color="#eee" size="30" class="close"/>
+            </div>
         </div>
     </div>
 </template>
@@ -32,11 +36,11 @@
 export default {
     data(){
         return{
-            dateRange: [this.getDate('day'),this.getDate('day')],
-            date: this.getDate('day'),
+            day: this.getDate('day'),
             month: this.getDate('month'),
             year: this.getDate('year'),
             selectorType: 1,
+            showMap: false,
             getDisabledDate:{
                 disabledDate (date) {
                     return date && date.valueOf() > Date.now();
@@ -57,7 +61,7 @@ export default {
                         left: 'left',
                         data: ['北京','上海','墨西哥','伦敦','其它']
                     },
-                    series : [
+                    series: [
                         {
                             name: '攻击来源',
                             type: 'pie',
@@ -88,32 +92,116 @@ export default {
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,
-                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        data: [],
+                        name: ''
                     },
                     yAxis: {
                         type: 'value'
                     },
                     series: [{
-                        data: [820, 932, 901, 934, 1290, 1330, 1320],
+                        data: [4, 0, 19, 9, 12, 133, 0, 18, 0],
                         type: 'line',
-                        color: '#4682B4'
+                        color: '#77bdf7'
                     }]
                 }
             }
         }
     },
     mounted(){
-        var fanChart = echarts.init(document.getElementById('fan-chart'));
-        var lineChart = echarts.init(document.getElementById('line-chart'));
-        fanChart.setOption(this.dataOption.fanChartOption);
-        lineChart.setOption(this.dataOption.lineChartOption);
+        this.fanChart = echarts.init(document.getElementById('fan-chart'));
+        this.lineChart = echarts.init(document.getElementById('line-chart'));
+        var that = this;
+        this.axios({
+            method: 'post',
+            url: 'http://192.168.43.156:8080/showData',
+            ContentType: 'application/json',
+            data: {
+                webid: that.$store.state.webId,
+                type: 1,
+                date: that.day
+            }
+        }).then(function (response) {
+            var fanData = response.data.sectorDiagramRespList;
+            var lineChartData = response.data.blineGraphRespList;
+            var mapData = response.data.mapRespList;
+            
+            fanData = fanData.map(x=>{
+                return {value: x['count'], name: x['country']}
+            })
+            that.dataOption.fanChartOption.series.data = fanData;
+            that.fanChart.setOption(that.dataOption.fanChartOption);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        // that.fanChart.setOption([])
+        switch(this.selectorType){
+            case 1:
+                this.dataOption.lineChartOption.xAxis.data = ['0','3','6','9','12','15','18','21','24'];
+                this.dataOption.lineChartOption.xAxis.name = '时';
+                break;
+            case 2:
+                this.dataOption.lineChartOption.xAxis.data = ['0','5','10','15','20','25','30'];
+                this.dataOption.lineChartOption.xAxis.name = '日';
+                break;
+            case 3:
+                this.dataOption.lineChartOption.xAxis.data = ['0','2','4','6','8','10','12'];
+                this.dataOption.lineChartOption.xAxis.name = '月';
+                break;
+        }
+        
+        this.fanChart.setOption(this.dataOption.fanChartOption);
+        this.lineChart.setOption(this.dataOption.lineChartOption);
+
+        var map = new AMap.Map('map-container', {
+            resizeEnable: true,
+            center: [116.397428, 39.90923],
+            zoom: 3,
+            zooms: [1, 8],
+            mapStyle: 'amap://styles/dfcb6f74cce4797f4100936c07a65842'
+        });
+        var markerList = [];
+        var address = [
+            [116.406315, 39.908775],
+            [16.406315, 39.908775],
+            [36.406315, 59.908775],
+            [56.406315, 63.908775],
+            [11.406315, 59.908775],
+            [16.406315, 62.908775],
+            [106.406315, 29.908775],
+        ]
+        address.forEach(x => {
+            var marker = new AMap.Marker({
+                icon: "http://cxyxh.top/images/anchor_point.png",
+                position: x,
+                offset: new AMap.Pixel(-16, -30),
+            });
+            markerList.push(marker);
+        })
+        map.add(markerList);
     },
     methods:{
         setDateSelector(val){
             this.selectorType = parseInt(val);
+            switch(this.selectorType){
+                case 1:
+                    this.dataOption.lineChartOption.xAxis.data = ['0','3','6','9','12','15','18','21','24'];
+                    this.dataOption.lineChartOption.xAxis.name = '时';
+                    break;
+                case 2:
+                    this.dataOption.lineChartOption.xAxis.data = ['0','5','10','15','20','25','30'];
+                    this.dataOption.lineChartOption.xAxis.name = '日';
+                    break;
+                case 3:
+                    this.dataOption.lineChartOption.xAxis.data = ['0','2','4','6','8','10','12'];
+                    this.dataOption.lineChartOption.xAxis.name = '月';
+                    break;
+            }
+            // this.fanChart.setOption(this.dataOption.fanChartOption);
+            this.lineChart.setOption(this.dataOption.lineChartOption);
         },
         getDate(type){
-            var date = new Date().toLocaleString().replace(/\//, '-');
+            var date = new Date().toLocaleString().replace(/\//g, '-').split(' ')[0];
             switch(type){
                 case 'month':
                     date = date.split('-');
@@ -126,7 +214,23 @@ export default {
             return date;
         },
         dateChange(date){
-            
+            this.axios({
+                method: 'post',
+                url: 'http://10.132.10.180:8080/cheklogin',
+                data: {
+                    type: 1,
+                    date: date
+                }
+            }).then(function (response) {
+                if(response.data.status == 200){
+                    
+                }else{
+                    that.hasError = true;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     },
     computed:{
@@ -134,15 +238,12 @@ export default {
             var content;
             switch(this.selectorType){
                 case 1:
-                    content = '自定义';
-                    break;
-                case 2:
                     content = '按日查看';
                     break;
-                case 3:
+                case 2:
                     content = '按月查看';
                     break;
-                case 4:
+                case 3:
                     content = '按年查看';
                     break;
             }
@@ -156,13 +257,13 @@ export default {
 #container{
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: rgb(253, 253, 253);
     display: flex;
     flex-direction: column;
 }
 #detail-header{
     width: 100%;
-    padding: 40px 50px;
+    padding: 40px 80px;
 }
 #date-selector{
     display: inline-flex;
@@ -212,5 +313,34 @@ button:hover{
     width: 45%;
     height: 80%;
     color: rgb(117, 177, 255);
+}
+#map-modal{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(102, 102, 102, 0.315);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+#map{
+    width: 1000px;
+    height: 600px;
+    position: relative;
+}
+#map-container{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.close{
+    position: absolute;
+    top: 3px; 
+    right: 3px;
+    cursor: pointer;
+    z-index: 999;
 }
 </style>

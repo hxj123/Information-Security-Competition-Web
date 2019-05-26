@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '../views/index'
+import Home from '../views/home'
 import Person from '../views/person'
 import Journal from '../views/journal'
 import Detail from '../views/detail'
@@ -14,8 +15,12 @@ export default new Router({
       path: '/',
       name: 'root',
       component: Index,
-      redirect: '/person',
+      redirect: '/home',
       children:[
+        {
+          path: 'home',
+          component: Home
+        },
         {
           path: 'person',
           component: Person
@@ -34,8 +39,12 @@ export default new Router({
       path: '/index',
       name: 'index',
       component: Index,
-      redirect: '/person',
+      redirect: '/home',
       children:[
+        {
+          path: 'home',
+          component: Home
+        },
         {
           path:'person',
           component: Person

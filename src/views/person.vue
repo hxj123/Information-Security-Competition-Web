@@ -1,40 +1,34 @@
 <template>
     <div id="person-container">
-        <div class="info">
-            <div class="info-item">
-                <span class="label">邮箱：</span>{{email}}
-                <Icon style="margin-left: 3px; cursor:pointer;" type="ios-copy-outline" @click="edit(1)" size="18"/>
+        <div class="info-card">
+            <div class="info">
+                <div class="info-item">
+                    <span class="label">邮箱：</span>{{email}}
+                    <Icon style="margin-left: 3px; cursor:pointer;" type="ios-copy-outline" @click="edit(1)" size="18"/>
+                </div>
+                <div class="info-item">
+                    <span class="label">电话：</span>{{phone}}
+                    <Icon style="margin-left: 3px; cursor:pointer;" type="ios-copy-outline" @click="edit(2)" size="18"/>
+                </div>
+                <div class="info-item">
+                    <span class="label">密码：</span>{{password}}
+                    <Icon style="margin-left: 3px; cursor:pointer;" type="ios-copy-outline" @click="edit(3)" size="18"/>
+                </div>
+                <div class="info-item">
+                    <span class="label">webId：</span>{{webId}}
+                </div>
             </div>
-            <div class="info-item">
-                <span class="label">昵称：</span>{{nickName}}
-                <Icon style="margin-left: 3px; cursor:pointer;" type="ios-copy-outline" @click="edit(2)" size="18"/>
+            <div id="avatar">
+                <img src="../assets/img/avatar.jpg" alt="头像">
+                个人头像
             </div>
-            <div class="info-item">
-                <span class="label">电话：</span>{{phone}}
-                <Icon style="margin-left: 3px; cursor:pointer;" type="ios-copy-outline" @click="edit(3)" size="18"/>
-            </div>
-            <div class="info-item">
-                <span class="label">webId：</span>{{account}}
-            </div>
-            <div class="info-item">
-                <span class="label">性别：</span>
-                <RadioGroup v-model="sex">
-                    <Radio label="男"></Radio>
-                    <Radio label="女"></Radio>
-                    <Radio label="保密"></Radio>
-                </RadioGroup>
-            </div>
-        </div>
-        <div id="avatar">
-            <img src="../assets/img/avatar.jpg" alt="头像">
-            个人头像
         </div>
         <MyModal :title="'请输入'+editTitle" v-on:confirm='verifyData' v-on:cancel='showModal=false;' v-if="showModal">
             <Input v-model="editContent" :placeholder="'请输入'+editTitle"/>
             <p v-if="hasError" class="input-error">输入{{editTitle}}有误，请检查</p>
         </MyModal>
         <TipModal v-on:confirm='showTip=false;' :showCancel='false' v-if="showTip">
-            <p>上传成功</p>
+            <p style="font-size:14px;">修改成功</p>
         </TipModal>
         <Loading v-if="isLoading"/>
     </div>
@@ -46,11 +40,10 @@ import Loading from '../components/Loading'
 export default {
     data(){
         return {
-            account: '8aa8c424a3b',
-            nickName: '小枫',
-            email: '1317490530@qq.com',
-            phone: '17728832201',
-            sex: '男',
+            webId: this.$store.state.webId,
+            email: this.$store.state.email,
+            phone: this.$store.state.phone,
+            password: this.$store.state.password,
             editIndex: 1,
             editTitle:'',
             editContent:'',
@@ -69,10 +62,13 @@ export default {
                     this.editTitle = '邮箱';
                     break;
                 case 2:
-                    this.editTitle = '昵称';
+                    this.editTitle = '电话';
                     break;
                 case 3:
-                    this.editTitle = '手机号';
+                    this.editTitle = 'webId';
+                    break;
+                case 4:
+                    this.editTitle = '密码';
                     break;
             }
             this.editContent = '';
@@ -85,10 +81,10 @@ export default {
                     reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
                     break;
                 case 2:
-                    reg = /.+?/
-                    break;
-                case 3:
                     reg = /^1[3|5|7|8][0-9]\d{8}$/;
+                    break;
+                default:
+                    reg = /.+?/;
                     break;
             }
             if(!reg.test(this.editContent)){
@@ -100,19 +96,38 @@ export default {
                         this.email = this.editContent;
                         break;
                     case 2:
-                        this.nickName = this.editContent;
-                        reg = /.+?/
+                        this.phone = this.editContent;
                         break;
                     case 3:
-                        this.phone = this.editContent;
-                        reg = /^1[3|5|7|8][0-9]\d{8}$/;
+                        this.password = this.editContent;
                         break;
                 }
                 this.showModal = false;
-                setTimeout(()=>{
-                    this.isLoading = false;
-                    this.showTip = true;
-                },2000);
+                var that = this;
+                this.axios({
+                    method: 'post',
+                    url: that.$store.state.url+'saveInfo',
+                    ContentType: 'application/json',
+                    data: {
+                        email: that.email,
+                        webid: that.webId,
+                        password: that.password,
+                        telephone: that.phone
+                    }
+                }).then(function (response) {
+                    if(response.data.status == 200){
+                        that.isLoading = false;
+                        that.showTip = true;
+                        that.$store.commit('setPassword', that.password);
+                        that.$store.commit('setEamil', that.email);
+                        that.$store.commit('setPhone', response.data.data.telephone);
+                    }else{
+                        that.hasError = true;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             }
         }
     },
@@ -129,14 +144,23 @@ export default {
     height: 100%;
     display: flex;
     align-items: center;
-    position: relative;
     justify-content: space-around;
+}
+.info-card{
+    width: 800px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: space-between;
+    background: #fafafa;
+    padding: 60px 100px;
+    border-radius: 5px;
 }
 .info{
     overflow: auto;
 }
 .info-item{
-    margin-bottom: 40px;
+    margin-bottom: 36px;
     color: #494949;
     display: flex;
     font-size: 14px;
@@ -151,10 +175,8 @@ export default {
     width: 60px;
 }
 #avatar{
-    /* position: absolute; */
     top: 100px;
     right: 0;
-    margin: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;

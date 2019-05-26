@@ -8,23 +8,23 @@
         </div>
         <div id="main">
             <div id="nav">
-                <Menu active-name="person">
-                    <MenuGroup title="个人中心">
-                        <MenuItem name="person" to='/index/person'>
-                            <Icon type="md-person" />
-                            个人信息
-                        </MenuItem>
-                    </MenuGroup>
-                    <MenuGroup title="攻击信息">
-                        <MenuItem name="journal" to='/index/journal'>
-                            <Icon type="ios-bookmarks" />
-                            攻击日志
-                        </MenuItem>
-                        <MenuItem name="detail" to='/index/detail'>
-                            <Icon type="logo-angular" />
-                            详细信息
-                        </MenuItem>
-                    </MenuGroup>
+                <Menu active-name="home">
+                    <MenuItem name="home" to='/index/home'>
+                        <Icon type="md-home" />
+                        网站首页
+                    </MenuItem>
+                    <MenuItem name="journal" to='/index/journal'>
+                        <Icon type="ios-bookmarks" />
+                        访问日志
+                    </MenuItem>
+                    <MenuItem name="detail" to='/index/detail'>
+                        <Icon type="logo-angular" />
+                        详细信息
+                    </MenuItem>
+                    <MenuItem name="person" to='/index/person'>
+                        <Icon type="md-person" />
+                        个人信息
+                    </MenuItem>
                 </Menu>
             </div>
             <div id="content-area">

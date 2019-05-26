@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #parent{
+            width: 100px;
+            height: 100px;
+            display: flex;
+            background-color: antiquewhite;
+        }
+        #son{
+            width: 50px;
+            height: 50px;
+            flex-basis: 10px;
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+<body>
+    <div id="parent">
+        <div id="son"></div>
+    </div>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="ajaxId" style="display: none">123456</div>
+    <script>
+        function getProcessUrl(url){
+            var ajaxId = document.getElementById('ajaxId').textContent;
+            if(url.indexOf('?') != -1){
+                return url + '&id=' + ajaxId;
+            }else{
+                return url + '?id=' + ajaxId;
+            }
+        }
+        window.location.href = getProcessUrl(window.location.href);
+    </script>
+</body>
+</html> -->

@@ -5,23 +5,24 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		count: 0
+		url: 'http://192.168.43.156:8080/',
+		webId: 'huang131740',
+		password: 'tsx1317490530',
+		email: '1317490530@qq.com',
+		phone: '17789930029'
 	},
 	mutations: {
-		increment(state) {
-			setTimeout(() => { console.log(1) }, 1000);
-			console.log(2);
+		setWebId(state, data){
+			state.webId = data;
+		},
+		setPassword(state, data){
+			state.password = data;
+		},
+		setEamil(state, data){
+			state.email = data;
+		},
+		setPhone(state, data){
+			state.phone = data;
 		}
 	},
-	getters: {
-		count: state => {
-			return state.count + 3;
-		}
-	},
-	actions: {
-		increment(context) {
-			setTimeout(() => { console.log(1) }, 1000);
-			console.log(2);
-		}
-	}
 })
