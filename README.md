@@ -1,21 +1,16 @@
-# vueapp
+## 代码混淆防御系统后台网站 ##
 
-> A Vue.js project
+**简介**
 
-## Build Setup
+全国信息安全大赛项目，一个关于代码混淆防御系统后台网站
 
-``` bash
-# install dependencies
-npm install
 
-# serve with hot reload at localhost:8080
-npm run dev
+部分页面截图
 
-# build for production with minification
-npm run build
+![](https://i.imgur.com/YaIw1uM.jpg)
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
+![](https://i.imgur.com/CLH0W0b.jpg)
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![](https://i.imgur.com/un5ih2K.jpg)
+
+![](https://i.imgur.com/lrAaIuJ.jpg)
