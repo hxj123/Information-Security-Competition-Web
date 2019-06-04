@@ -68,7 +68,7 @@ export default {
         }
     },
     mounted(){
-        this.pageSize = 10;
+        this.pageSize = 100;
         this.emailSwicth = false;
         this.getTableData(1);
     },

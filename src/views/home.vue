@@ -191,6 +191,7 @@ export default {
                 legend: {
                     data:['正常访问次数','恶意访问次数']
                 },
+                color: ['#5190b8','#d48265'],
                 grid: {
                     left: '3%',
                     right: '4%',
