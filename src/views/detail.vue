@@ -300,7 +300,7 @@ button:hover{
 }
 #detail-chart{
     display: flex;
-    flex-grow: 1;
+    height: 480px;
     padding: 0 50px;
     align-items: center;
     justify-content: space-around;

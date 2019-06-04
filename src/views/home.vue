@@ -22,10 +22,16 @@
             </div>
         </div>
         <div id="main-chart">
-            <div id="fan-chart"></div>
-            <span class="line" style="height: 85%"></span>
-            <div id="stacking-area-chart"></div>
+            <div class="chart-item">
+                <div id="fan-chart"></div>
+                <div id="stacking-area-chart"></div>
+            </div>
+            <div class="chart-item">
+                <div id="annular-chart"></div>
+                <div id="histogram-chart"></div>
+            </div>
         </div>
+        <!-- <span class="line" style="height: 85%"></span> -->
     </div>
 </template>
 
@@ -70,7 +76,7 @@ export default {
                     }
                 ]
             },
-            StackingAreaChartOption: {
+            stackingAreaChartOption: {
                 title: {
                     text: '近一周访问',
                     top: '15',
@@ -134,14 +140,98 @@ export default {
                         data:[12, 32, 10, 13, 60, 23, 21 ]
                     }
                 ]
+            },
+            annularChartOption: {
+                title: {
+                    text: '访问方式占比',
+                    x: 'center',
+                    y:'15'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a}: {b} <br/>总访问量: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: 12,
+                    top: 10,
+                    borderColor: '#000',
+                    borderWidth: 0.5,
+                    padding: [10, 18],
+                    icon: "circle",
+                    data:['GET','POST','PUT','DELETE','HEAD','OTHER']
+                },
+                series: [
+                    {
+                        name:'访问方式',
+                        type:'pie',
+                        avoidLabelOverlap: true,
+                        label: {
+                        },
+                        center: ['50%', '60%'],
+                        radius: ['45%','62%'],
+                        data:[
+                            {value:5326, name:'GET'},
+                            {value:2224, name:'POST'},
+                            {value:234, name:'PUT'},
+                            {value:135, name:'DELETE'},
+                            {value:7, name:'HEAD'},
+                            {value:10, name:'OTHER'},
+                        ]
+                    }
+                ]
+            },
+            histogramChartOption: {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer : {            
+                        type : 'shadow'
+                    }
+                },
+                legend: {
+                    data:['正常访问次数','恶意访问次数']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['亚洲','北美洲','欧洲','南美洲','非洲','大洋洲']
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'正常访问次数',
+                        type:'bar',
+                        data:[320, 332, 301, 334, 390, 330]
+                    },
+                    {
+                        name:'恶意访问次数',
+                        type:'bar',
+                        data:[120, 132, 101, 134, 90, 23, 210]
+                    },
+                ]
             }
         }
     },
     mounted(){
         this.fanChart = echarts.init(document.getElementById('fan-chart'));
         this.stackingAreaChart = echarts.init(document.getElementById('stacking-area-chart'));
+        this.annularChart = echarts.init(document.getElementById('annular-chart'));
+        this.histogramChart = echarts.init(document.getElementById('histogram-chart'));
         this.fanChart.setOption(this.fanChartOption);
-        this.stackingAreaChart.setOption(this.StackingAreaChartOption);
+        this.stackingAreaChart.setOption(this.stackingAreaChartOption);
+        this.annularChart.setOption(this.annularChartOption);
+        this.histogramChart.setOption(this.histogramChartOption);
     }
 }
 </script>
@@ -149,7 +239,7 @@ export default {
 <style scoped>
 #container{
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     background-color: #fff;
     padding: 30px 50px;
     display: flex;
@@ -186,17 +276,22 @@ export default {
     background-color: rgb(207, 207, 207);
 }
 #main-chart{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.chart-item{
     margin-top: 50px;
     width: 100%;
-    min-height: 200px;
-    flex-grow: 1;
+    height: 320px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-#fan-chart, #stacking-area-chart{
+#fan-chart, #stacking-area-chart, #annular-chart, #histogram-chart{
     width: 46%;
     height: 100%;
+    padding: 20px;
     background-color: rgb(248, 248, 248);
 }
 </style>

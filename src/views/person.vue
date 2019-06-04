@@ -141,7 +141,7 @@ export default {
 <style scoped>
 #person-container{
     width: 800px;
-    height: 100%;
+    height: 600px;
     display: flex;
     align-items: center;
     justify-content: space-around;

@@ -54,12 +54,16 @@
     overflow: hidden;
 }
 #header{
+    width: 100%;
     height: 64px;
     background: #5b6270;
     display: flex;
     align-items: center;
     padding: 0 50px;
     justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 #title{
     display: flex;
@@ -75,23 +79,29 @@
     margin-right: 5px;
 }
 #main{
-    flex-grow: 1;
+    height: calc(100% - 64px);
+    position: relative;
     display: flex;
+    margin-top: 64px;
 }
 #nav{
-    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
     background: #fff;
     border-right: 1px solid #eee
 }
 #content-area{
-    width: 100%;
-    min-width: 1000px;
+    width: calc(100% - 240px);
     height: 100%;
     padding: 15px;
+    margin-left: 240px;
+    overflow: auto;
 }
 #content{
     width: 100%;
-    height: 100%;
+    min-height: 100%; 
     background-color: #fff;
     padding: 10px;
     display: flex;

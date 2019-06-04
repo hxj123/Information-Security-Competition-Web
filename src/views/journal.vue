@@ -131,7 +131,7 @@ export default {
 }
 .table-bottom{
     width: 100%;
-    height: 50px;
+    height: 48px;
     margin-top: 5px;
     display: flex;
     align-items: center;
